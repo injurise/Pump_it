@@ -28,8 +28,15 @@ data_features["region"].nunique()
 
 sns.barplot(x = data_features["region_code"], y = data_features["population"])
 plt.figure(figsize = (12,6))
+# scatterplot isn't so useful for the categorical data I guess, probably swarmplot and violinplot below are better
 sns.scatterplot(x = data_features["water_quality"], y = data_features["population"], hue = data_features["quantity"])
+plt.figure(figsize = (12,6))
 
+#Don't uncomment the swarmplot, it only really works for less data
+#Try the ciolinplot below instead
+#sns.swarmplot(x = data_features["water_quality"], y = data_features["population"])
+
+sns.violinplot(x = data_features["water_quality"], y = data_features["population"])
 
 #sns.heatmap(data_features[["basin","population"]])
 
