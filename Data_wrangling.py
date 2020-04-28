@@ -8,13 +8,32 @@ Created on Sun Apr 26 01:42:04 2020
 
 import pandas as pd
 import matplotlib.pyplot as plt
+import seaborn as sns
 
-data_features = pd.read_csv("Pump_it_Up_training_features.csv")
-data_lables = pd.read_csv("Pump_it_Up_Data_Mining_the_Water_Table_-_Training_set_labels.csv")
+data_features = pd.read_csv("Pump_it_Up_training_features.csv", index_col = "id")
+data_lables = pd.read_csv("Pump_it_Up_Data_Mining_the_Water_Table_-_Training_set_labels.csv", index_col = "id")
 
-data_features.hist(column=["amount_tsh"],bins=1000)
+data_features.head()
+data_features.tail()
+list(data_features.columns)
+
+plt.figure(figsize = (12,6))
 plt.xlim(0,6000)
+plt.hist(data_features["amount_tsh"],bins = 1000)
 
-# seems to be one kinda outlier with a lot of water:
+data_features["region_code"].nunique()
+data_features["region"].nunique()
+#5 less regions than region codes? 
+
+
+sns.barplot(x = data_features["region_code"], y = data_features["population"])
+plt.figure(figsize = (12,6))
+sns.scatterplot(x = data_features["water_quality"], y = data_features["population"], hue = data_features["quantity"])
+
+
+#sns.heatmap(data_features[["basin","population"]])
+
+
+# seems to be one kinda outlier with a lot of water (around 20000):
 print(data_features["amount_tsh"].max())
 print(data_features.index[data_features["amount_tsh"]==data_features["amount_tsh"].max()])
