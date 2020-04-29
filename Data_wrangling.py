@@ -10,11 +10,25 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 
+def countdataocc(column): 
+    dic= {}
+    for entry in column:
+        if entry in dic:
+            dic[entry] += 1
+        else:
+            dic[entry] = 1
+    
+    return dic
+
+
 data_features = pd.read_csv("Pump_it_Up_training_features.csv", index_col = "id")
 data_lables = pd.read_csv("Pump_it_Up_Data_Mining_the_Water_Table_-_Training_set_labels.csv", index_col = "id")
 
 data_features.head()
 data_features.tail()
+
+data_features.describe()
+
 list(data_features.columns)
 
 plt.figure(figsize = (12,6))
