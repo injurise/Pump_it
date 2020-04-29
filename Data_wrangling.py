@@ -19,9 +19,10 @@ def countdataocc(column):
             dic[entry] = 1
     
     return dic
+x1=countdataocc(data_features["water_quality"])
+x2=countdataocc(data_features["quality_group"])
 
-
-data_features = pd.read_csv("Pump_it_Up_training_features.csv", index_col = "id")
+data_features = pd.read_csv("Training_set_features.csv", index_col = "id")
 data_lables = pd.read_csv("Pump_it_Up_Data_Mining_the_Water_Table_-_Training_set_labels.csv", index_col = "id")
 
 data_features.head()
@@ -58,3 +59,19 @@ sns.violinplot(x = data_features["water_quality"], y = data_features["population
 # seems to be one kinda outlier with a lot of water (around 20000):
 print(data_features["amount_tsh"].max())
 print(data_features.index[data_features["amount_tsh"]==data_features["amount_tsh"].max()])
+
+
+
+sns.scatterplot(x = data_features["water_quality"], y = data_features["quality_group"], hue = data_features["quantity"])
+plt.figure(figsize = (12,6))
+
+#Checking if variables are the same
+pd.set_option("display.max_columns",200)
+print(pd.crosstab(data_features["extraction_type_class"], data_features["extraction_type"],margins = False))
+
+c = pd.crosstab(data_features.extraction_type_class, data_features.extraction_type_group).stack().reset_index(name='C')
+c.plot.scatter('extraction_type_class', 'extraction_type_group', s=c.C * 0.1)
+
+#Inspecting distribution of one specific category of the feature
+x = data_features[data_features["extraction_type_group"] == "swn 80"] 
+x.plot.scatter(x, 'extraction_type_group', s=c.C * 0.1)
