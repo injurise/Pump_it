@@ -75,3 +75,8 @@ c.plot.scatter('extraction_type_class', 'extraction_type_group', s=c.C * 0.1)
 #Inspecting distribution of one specific category of the feature
 x = data_features[data_features["extraction_type_group"] == "swn 80"] 
 x.plot.scatter(x, 'extraction_type_group', s=c.C * 0.1)
+
+#checking for missing data, although it doesn't count unknown and 0 values
+print(data_features.isnull().sum())
+#checking the total num of 0s in a colums
+print(data_features["construction_year"].isin([0]).sum())
