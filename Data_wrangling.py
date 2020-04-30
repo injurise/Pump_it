@@ -9,6 +9,7 @@ Created on Sun Apr 26 01:42:04 2020
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
+import numpy as np
 
 def countdataocc(column): 
     dic= {}
@@ -19,18 +20,43 @@ def countdataocc(column):
             dic[entry] = 1
     
     return dic
-x1=countdataocc(data_features["water_quality"])
-x2=countdataocc(data_features["quality_group"])
+
+
 
 data_features = pd.read_csv("Training_set_features.csv", index_col = "id")
-data_lables = pd.read_csv("Pump_it_Up_Data_Mining_the_Water_Table_-_Training_set_labels.csv", index_col = "id")
+data_labels = pd.read_csv("Pump_it_Up_Data_Mining_the_Water_Table_-_Training_set_labels.csv", index_col = "id")
 
 data_features.head()
 data_features.tail()
 
 data_features.describe()
 
+#check if data feature Ids are the same as 
+print(np.all(data_features.index == data_labels.index))
+#Add labels to trainings_df for analysis
+data_features["label"]=data_labels["status_group"]
+
+#check how many occurences of each label we have
+#two ways:
+#simple hist with pd
+data_features["label"].value_counts().plot.bar()
+y = data_features.groupby(["water_quality"])
+plt.figure(figsize = (12,20))
+data_features.groupby(["label", 'water_quality']).size().unstack().plot.bar(stacked=True)
+
+
+
+#stacked hist with matplot
+plt.bar(data_features["label"].value_counts().index,data_features["label"].value_counts())
+
+
+
+
+        
+x1=countdataocc(data_features["water_quality"])
+x2=countdataocc(data_features["quality_group"])
 list(data_features.columns)
+
 
 plt.figure(figsize = (12,6))
 plt.xlim(0,6000)
@@ -73,8 +99,8 @@ c = pd.crosstab(data_features.extraction_type_class, data_features.extraction_ty
 c.plot.scatter('extraction_type_class', 'extraction_type_group', s=c.C * 0.1)
 
 #Inspecting distribution of one specific category of the feature
-x = data_features[data_features["extraction_type_group"] == "swn 80"] 
-x.plot.scatter(x, 'extraction_type_group', s=c.C * 0.1)
+swn_rows = data_features[data_features["extraction_type_group"] == "swn 80"] 
+plt.hist(swn_rows["label"])
 
 #checking for missing data, although it doesn't count unknown and 0 values
 print(data_features.isnull().sum())
