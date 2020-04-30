@@ -104,3 +104,16 @@ plt.hist(swn_rows["label"])
 print(data_features.isnull().sum())
 #checking the total num of 0s in a colums
 print(data_features["construction_year"].isin([0]).sum())
+
+#replacing unknown to nan
+data_features.replace(to_replace="unknown",value="nan", inplace=True)
+data_features.replace(to_replace="Not Known",value="nan", inplace=True)
+#checking for missing categorical data
+print(data_features.isnull().sum())
+
+#checking the total num of 0s in a colums
+print(data_features["gps_heigth"].isin([0]).sum())
+
+#Deleting duplicate columns
+del data_features['payment']
+
