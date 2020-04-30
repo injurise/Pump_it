@@ -69,9 +69,35 @@ plt.figure(figsize = (12,6))
 pd.set_option("display.max_columns",200)
 print(pd.crosstab(data_features["extraction_type_class"], data_features["extraction_type"],margins = False))
 
-c = pd.crosstab(data_features.extraction_type_class, data_features.extraction_type_group).stack().reset_index(name='C')
-c.plot.scatter('extraction_type_class', 'extraction_type_group', s=c.C * 0.1)
+c = pd.crosstab(data_features.source, data_features.source_type).stack().reset_index(name='C')
+c.plot.scatter('source', 'source_type', s=c.C * 0.1)
+
 
 #Inspecting distribution of one specific category of the feature
 x = data_features[data_features["extraction_type_group"] == "swn 80"] 
 x.plot.scatter(x, 'extraction_type_group', s=c.C * 0.1)
+
+#replacing unknown to nan
+data_features.replace(to_replace="unknown",value="nan", inplace=True)
+data_features.replace(to_replace="Not Known",value="nan", inplace=True)
+#checking for missing categorical data
+print(data_features.isnull().sum())
+
+#checking the total num of 0s in a colums
+print(data_features["gps_heigth"].isin([0]).sum())
+
+#Deleting duplicate columns
+del data_features['payment']
+
+def cramers_v(x, y):
+    confusion_matrix = pd.crosstab(x,y)
+    chi2 = ss.chi2_contingency(confusion_matrix)[0]
+    n = confusion_matrix.sum().sum()
+    phi2 = chi2/n
+    r,k = confusion_matrix.shape
+    phi2corr = max(0, phi2-((k-1)*(r-1))/(n-1))
+    rcorr = r-((r-1)**2)/(n-1)
+    kcorr = k-((k-1)**2)/(n-1)
+    return np.sqrt(phi2corr/min((kcorr-1),(rcorr-1)))
+            
+
