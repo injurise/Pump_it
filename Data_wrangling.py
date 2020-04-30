@@ -40,16 +40,14 @@ data_features["label"]=data_labels["status_group"]
 #two ways:
 #simple hist with pd
 data_features["label"].value_counts().plot.bar()
-y = data_features.groupby(["water_quality"])
-plt.figure(figsize = (12,20))
 data_features.groupby(["label", 'water_quality']).size().unstack().plot.bar(stacked=True)
 
-
-
+dftest=data_features[data_features["extraction_type_class"]=="handpump"]
+dftest.groupby(["label", 'extraction_type']).size().unstack().plot.bar(stacked=True)
 #stacked hist with matplot
 plt.bar(data_features["label"].value_counts().index,data_features["label"].value_counts())
 
-
+#look into merging most of the extraction type classses into one category 
 
 
         
