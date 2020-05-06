@@ -10,6 +10,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 import numpy as np
+from sklearn.ensemble import RandomForestClassifier
 
 def countdataocc(column): 
     dic= {}
@@ -36,6 +37,19 @@ print(np.all(data_features.index == data_labels.index))
 #Add labels to trainings_df for analysis
 data_features["label"]=data_labels["status_group"]
 
+
+#Deleting duplicate columns
+del data_features['payment']
+
+overview = data_features["funder"].value_counts()
+percentage = overview/overview.sum()
+percentage_working_by_funder = data_features.groupby(["funder","label"]).size().unstack()
+percentage_working_by_funder["total"] = percentage_working_by_funder.sum(axis =1)
+percentage_working_by_funder.functional  = percentage_working_by_funder["functional"]/percentage_working_by_funder["total"]
+percentage_working_by_funder["functional needs repair"]  = percentage_working_by_funder["functional needs repair"]/percentage_working_by_funder["total"]
+percentage_working_by_funder["non functional"]  = percentage_working_by_funder["non functional"]/percentage_working_by_funder["total"]
+
+
 #check how many occurences of each label we have
 #two ways:
 #simple hist with pd
@@ -46,6 +60,7 @@ dftest=data_features[data_features["extraction_type_class"]=="handpump"]
 dftest.groupby(["label", 'extraction_type']).size().unstack().plot.bar(stacked=True)
 #stacked hist with matplot
 plt.bar(data_features["label"].value_counts().index,data_features["label"].value_counts())
+
 
 #look into merging most of the extraction type classses into one category 
 
@@ -114,6 +129,44 @@ print(data_features.isnull().sum())
 #checking the total num of 0s in a colums
 print(data_features["gps_heigth"].isin([0]).sum())
 
-#Deleting duplicate columns
-del data_features['payment']
+
+
+
+#Split up columns to use for the classifier
+#Label encoded classes and store definitions
+label_encoded= pd.factorize(data_features["label"])
+data_features.label = label_encoded[0]
+definitions = label_encoded[1]
+
+training_features = ["quantity_group","water_quality"]
+random_forest_data = data_features[training_features]
+random_forest_data = pd.get_dummies(random_forest_data)
+random_forest_data["label"] = data_features.label
+#Split data into training (0.8),validation (0.1) and test set (0.1)
+#maybe we can use a stratified split later on, but for now this should do
+
+
+rf_train_data = random_forest_data[:int(0.8*len(random_forest_data))]
+rf_validation_data = random_forest_data[int(-0.2*len(random_forest_data)):-int(0.1*len(random_forest_data))]
+rf_test_data = random_forest_data[int(-0.1*len(random_forest_data)):]
+
+#we can check the distribution of the labels but the split seems okay
+print(rf_train_data.label.value_counts()/len(rf_train_data))
+print(rf_validation_data.label.value_counts()/len(rf_validation_data))
+print(rf_test_data.label.value_counts()/len(rf_test_data))
+
+
+
+rf = RandomForestClassifier(max_depth=10, random_state=0)
+fit = rf.fit(rf_train_data.drop(columns = ["label"]),rf_train_data["label"])
+
+prediction = fit.predict(rf_validation_data.drop(columns = ["label"]))
+
+reversefactor = dict(zip(range(3),definitions))
+rf_validation_data["label"] = np.vectorize(reversefactor.get)(rf_validation_data["label"])
+prediction = np.vectorize(reversefactor.get)(prediction)
+
+print(pd.crosstab(rf_validation_data["label"], prediction, rownames=['Actual Species'], colnames=['Predicted Species']))
+
+
 
