@@ -163,6 +163,7 @@ fit = rf.fit(rf_train_data.drop(columns = ["label"]),rf_train_data["label"])
 prediction = fit.predict(rf_validation_data.drop(columns = ["label"]))
 
 #evaluate accuracy of predictor
+#Note, baseline accuracy should probably be 54% as that is the accuracy you get if you always choose 0 
 
 reversefactor = dict(zip(range(3),definitions))
 rf_validation_data["label"] = np.vectorize(reversefactor.get)(rf_validation_data["label"])
