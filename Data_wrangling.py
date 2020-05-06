@@ -11,6 +11,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import numpy as np
 from sklearn.ensemble import RandomForestClassifier
+from sklearn.metrics import accuracy_score
 
 def countdataocc(column): 
     dic= {}
@@ -132,8 +133,7 @@ print(data_features["gps_heigth"].isin([0]).sum())
 
 
 
-#Split up columns to use for the classifier
-#Label encoded classes and store definitions
+#Label encodedclasses and store definitions
 label_encoded= pd.factorize(data_features["label"])
 data_features.label = label_encoded[0]
 definitions = label_encoded[1]
@@ -155,18 +155,21 @@ print(rf_train_data.label.value_counts()/len(rf_train_data))
 print(rf_validation_data.label.value_counts()/len(rf_validation_data))
 print(rf_test_data.label.value_counts()/len(rf_test_data))
 
-
+#Fit randomforest and predict labels
 
 rf = RandomForestClassifier(max_depth=10, random_state=0)
 fit = rf.fit(rf_train_data.drop(columns = ["label"]),rf_train_data["label"])
 
 prediction = fit.predict(rf_validation_data.drop(columns = ["label"]))
 
+#evaluate accuracy of predictor
+
 reversefactor = dict(zip(range(3),definitions))
 rf_validation_data["label"] = np.vectorize(reversefactor.get)(rf_validation_data["label"])
 prediction = np.vectorize(reversefactor.get)(prediction)
 
-print(pd.crosstab(rf_validation_data["label"], prediction, rownames=['Actual Species'], colnames=['Predicted Species']))
-
-
+contingency_table = pd.crosstab(rf_validation_data["label"], prediction, rownames=['Actual Label'], colnames=['Predicted Label']))
+print(contigency_tabel)
+overall_accuracy = accuracy_score(rf_validation_data["label"],prediction)
+print(overall_accuracy)
 
