@@ -131,6 +131,7 @@ print(data_features.isnull().sum())
 print(data_features["gps_heigth"].isin([0]).sum())
 
 
+######################################Prediction Part#########################################################
 
 
 #Label encodedclasses and store definitions
