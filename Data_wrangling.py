@@ -47,6 +47,7 @@ del data_features["water_quality"]
 del data_features['quantity_group']
 del data_features["ward"]
 del data_features["num_private"]
+del data_features['scheme_management']
 
 overview = data_features["funder"].value_counts()
 percentage = overview/overview.sum()
@@ -71,7 +72,13 @@ plt.bar(data_features["label"].value_counts().index,data_features["label"].value
 
 #look into merging most of the extraction type classses into one category 
 
-
+#plotting the map with wells
+print(data_features["longitude"].isin([0]).sum())
+missing_longitudes = data_features[ data_features['longitude'] == 0 ]
+mapping= data_features.loc[:,['longitude','latitude']]
+mapping = mapping.drop(missing_longitudes.index, axis=0)
+plt.scatter(x=mapping['longitude'], y=mapping['latitude'])
+plt.show()
         
 x1=countdataocc(data_features["water_quality"])
 x2=countdataocc(data_features["quality_group"])
@@ -154,8 +161,8 @@ plt.figure(figsize = (12,6))
 pd.set_option("display.max_columns",200)
 print(pd.crosstab(data_features["extraction_type_class"], data_features["extraction_type"],margins = False))
 
-c = pd.crosstab(data_features.extraction_type_class, data_features.extraction_type_group).stack().reset_index(name='C')
-c.plot.scatter('extraction_type_class', 'extraction_type_group', s=c.C * 0.1)
+c = pd.crosstab(data_features.scheme_management, data_features.management_group).stack().reset_index(name='C')
+c.plot.scatter('scheme_management', 'management_group', s=c.C * 0.1)
 
 #Inspecting distribution of one specific category of the feature
 swn_rows = data_features[data_features["extraction_type_group"] == "swn 80"] 
