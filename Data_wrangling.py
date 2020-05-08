@@ -43,6 +43,7 @@ data_features["label"]=data_labels["status_group"]
 del data_features['payment']
 del data_features['scheme_name']
 del data_features['recorded_by']
+del data_features['quantity_group']
 
 overview = data_features["funder"].value_counts()
 percentage = overview/overview.sum()
