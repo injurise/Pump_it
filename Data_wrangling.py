@@ -43,6 +43,7 @@ data_features["label"]=data_labels["status_group"]
 del data_features['payment']
 del data_features['scheme_name']
 del data_features['recorded_by']
+del data_features["water_quality"]
 
 overview = data_features["funder"].value_counts()
 percentage = overview/overview.sum()
@@ -71,6 +72,13 @@ plt.bar(data_features["label"].value_counts().index,data_features["label"].value
         
 x1=countdataocc(data_features["water_quality"])
 x2=countdataocc(data_features["quality_group"])
+
+#water quality, quality group 
+
+c = pd.crosstab(data_features.water_quality, data_features.quality_group).stack().reset_index(name='C')
+c.plot.scatter('water_quality', 'quality_group', s=c.C * 0.1)
+
+
 list(data_features.columns)
 
 
