@@ -45,6 +45,7 @@ del data_features['scheme_name']
 del data_features['recorded_by']
 del data_features["water_quality"]
 del data_features['quantity_group']
+del data_features["ward"]
 
 
 overview = data_features["funder"].value_counts()
@@ -79,6 +80,17 @@ x2=countdataocc(data_features["quality_group"])
 
 c = pd.crosstab(data_features.water_quality, data_features.quality_group).stack().reset_index(name='C')
 c.plot.scatter('water_quality', 'quality_group', s=c.C * 0.1)
+
+#lga,ward 
+
+data_features.ward.value_counts()
+data_features.ward.head()
+
+data_features.lga.value_counts()
+data_features.lga.head()
+
+c = pd.crosstab(data_features.lga, data_features.ward).stack().reset_index(name='C')
+c.plot.scatter('lga', 'ward', s=c.C * 0.1)
 
 
 list(data_features.columns)
