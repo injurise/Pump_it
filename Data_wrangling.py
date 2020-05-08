@@ -74,7 +74,7 @@ print(data_features["longitude"].isin([0]).sum())
 missing_longitudes = data_features[ data_features['longitude'] == 0 ]
 mapping= data_features.loc[:,['longitude','latitude']]
 mapping = mapping.drop(missing_longitudes.index, axis=0)
-plt.scatter(x=data_features['longitude'], y=data_features['latitude'])
+plt.scatter(x=mapping['longitude'], y=mapping['latitude'])
 plt.show()
         
 x1=countdataocc(data_features["water_quality"])
