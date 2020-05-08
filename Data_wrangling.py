@@ -46,7 +46,7 @@ del data_features['recorded_by']
 del data_features["water_quality"]
 del data_features['quantity_group']
 del data_features["ward"]
-
+del data_features["num_private"]
 
 overview = data_features["funder"].value_counts()
 percentage = overview/overview.sum()
@@ -92,6 +92,24 @@ data_features.lga.head()
 c = pd.crosstab(data_features.lga, data_features.ward).stack().reset_index(name='C')
 c.plot.scatter('lga', 'ward', s=c.C * 0.1)
 
+#Waterpoint name(wpt_name)
+data_features["wpt_name"].value_counts()
+data_features["wpt_name"].value_counts().head(10)
+shuleni_rows = data_features[data_features["wpt_name"]=="Shuleni"]
+plt.hist(shuleni_rows.label)
+shuleni_rows.label.value_counts()/len(shuleni_rows)
+
+None_rows = data_features[data_features["wpt_name"]=="none"]
+plt.hist(None_rows.label)
+None_rows.label.value_counts()/len(None_rows)
+#plt.hist(None_rows.
+         
+# NUm_private can be deleted entirely
+Num_private_value_rows = data_features[data_features.num_private != 0]
+plt.hist(Num_private_value_rows.label)
+Num_private_value_rows.label.value_counts()/len(Num_private_value_rows)
+
+
 
 list(data_features.columns)
 
@@ -110,6 +128,9 @@ plt.figure(figsize = (12,6))
 # scatterplot isn't so useful for the categorical data I guess, probably swarmplot and violinplot below are better
 sns.scatterplot(x = data_features["water_quality"], y = data_features["population"], hue = data_features["quantity"])
 plt.figure(figsize = (12,6))
+
+
+
 
 #Don't uncomment the swarmplot, it only really works for less data
 #Try the ciolinplot below instead
