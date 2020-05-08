@@ -41,6 +41,8 @@ data_features["label"]=data_labels["status_group"]
 
 #Deleting duplicate columns
 del data_features['payment']
+del data_features['scheme_name']
+del data_features['recorded_by']
 
 overview = data_features["funder"].value_counts()
 percentage = overview/overview.sum()
@@ -170,8 +172,8 @@ reversefactor = dict(zip(range(3),definitions))
 rf_validation_data["label"] = np.vectorize(reversefactor.get)(rf_validation_data["label"])
 prediction = np.vectorize(reversefactor.get)(prediction)
 
-contingency_table = pd.crosstab(rf_validation_data["label"], prediction, rownames=['Actual Label'], colnames=['Predicted Label']))
-print(contigency_tabel)
+contingency_table = pd.crosstab(rf_validation_data["label"], prediction, rownames=['Actual Label'], colnames=['Predicted Label'])
+print(contingency_table)
 overall_accuracy = accuracy_score(rf_validation_data["label"],prediction)
 print(overall_accuracy)
 
