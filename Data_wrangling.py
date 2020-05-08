@@ -71,6 +71,13 @@ plt.bar(data_features["label"].value_counts().index,data_features["label"].value
 
 
 #look into merging most of the extraction type classses into one category 
+pd.set_option("display.max_columns",200)
+print(pd.crosstab(data_features["extraction_type_class"], data_features["extraction_type"],margins = False))
+
+c = pd.crosstab(data_features.extraction_type_class, data_features.extraction_type).stack().reset_index(name='C')
+c.plot.scatter('extraction_type_class', 'extraction_type', s=c.C * 0.1)
+
+table = pd.crosstab(data_features["extraction_type_group"],data_features.extraction_type)
 
 #plotting the map with wells
 print(data_features["longitude"].isin([0]).sum())
@@ -89,6 +96,7 @@ c = pd.crosstab(data_features.water_quality, data_features.quality_group).stack(
 c.plot.scatter('water_quality', 'quality_group', s=c.C * 0.1)
 
 #lga,ward 
+#basically regional governmental areas (ward, local government area)
 
 data_features.ward.value_counts()
 data_features.ward.head()
@@ -96,26 +104,29 @@ data_features.ward.head()
 data_features.lga.value_counts()
 data_features.lga.head()
 
-c = pd.crosstab(data_features.lga, data_features.ward).stack().reset_index(name='C')
-c.plot.scatter('lga', 'ward', s=c.C * 0.1)
+##########################################################
 
 #Waterpoint name(wpt_name)
 data_features["wpt_name"].value_counts()
 data_features["wpt_name"].value_counts().head(10)
-shuleni_rows = data_features[data_features["wpt_name"]=="Shuleni"]
-plt.hist(shuleni_rows.label)
-shuleni_rows.label.value_counts()/len(shuleni_rows)
 
-None_rows = data_features[data_features["wpt_name"]=="none"]
-plt.hist(None_rows.label)
-None_rows.label.value_counts()/len(None_rows)
-#plt.hist(None_rows.
+most_common_names = data_features["wpt_name"].value_counts()[0:5].index
+for name in most_common_names:
+    
+    subset = data_features[data_features["wpt_name"]== name]
+    print(name + " "+str(len(subset)))
+    print(subset.label.value_counts()/len(subset))
+    
+data_features.loc[~data_features.wpt_name.isin(most_common_names),"wpt_name"] = "other"
+
+##########################################################
          
 # NUm_private can be deleted entirely
 Num_private_value_rows = data_features[data_features.num_private != 0]
 plt.hist(Num_private_value_rows.label)
 Num_private_value_rows.label.value_counts()/len(Num_private_value_rows)
 
+##########################################################
 
 
 list(data_features.columns)
@@ -158,11 +169,7 @@ sns.scatterplot(x = data_features["water_quality"], y = data_features["quality_g
 plt.figure(figsize = (12,6))
 
 #Checking if variables are the same
-pd.set_option("display.max_columns",200)
-print(pd.crosstab(data_features["extraction_type_class"], data_features["extraction_type"],margins = False))
 
-c = pd.crosstab(data_features.scheme_management, data_features.management_group).stack().reset_index(name='C')
-c.plot.scatter('scheme_management', 'management_group', s=c.C * 0.1)
 
 #Inspecting distribution of one specific category of the feature
 swn_rows = data_features[data_features["extraction_type_group"] == "swn 80"] 
