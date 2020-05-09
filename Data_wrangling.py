@@ -48,6 +48,10 @@ del data_features['quantity_group']
 del data_features["ward"]
 del data_features["num_private"]
 del data_features['scheme_management']
+del data_features["extraction_type"]
+del data_features["extraction_type_class"]
+del data_features["region_code"]
+del data_features["waterpoint_type_group"]
 
 overview = data_features["funder"].value_counts()
 percentage = overview/overview.sum()
@@ -69,7 +73,7 @@ dftest.groupby(["label", 'extraction_type']).size().unstack().plot.bar(stacked=T
 #stacked hist with matplot
 plt.bar(data_features["label"].value_counts().index,data_features["label"].value_counts())
 
-
+##########################################################
 #look into merging most of the extraction type classses into one category 
 pd.set_option("display.max_columns",200)
 print(pd.crosstab(data_features["extraction_type_class"], data_features["extraction_type"],margins = False))
@@ -78,6 +82,13 @@ c = pd.crosstab(data_features.extraction_type_class, data_features.extraction_ty
 c.plot.scatter('extraction_type_class', 'extraction_type', s=c.C * 0.1)
 
 table = pd.crosstab(data_features["extraction_type_group"],data_features.extraction_type)
+table = pd.crosstab(data_features["extraction_type_group"],data_features.extraction_type_class)
+
+
+# Note, extraction type is a subset of extraction type group and that is a subset of ectraction type class
+# Let's move for now with extraction_type group as it includes information on specific handpumps (still up to 2000 wells per handpump)
+
+##########################################################
 
 #plotting the map with wells
 print(data_features["longitude"].isin([0]).sum())
@@ -119,6 +130,18 @@ for name in most_common_names:
     
 data_features.loc[~data_features.wpt_name.isin(most_common_names),"wpt_name"] = "other"
 
+#########################Waterpoint Type and Waterpoint type group#################################
+
+table = pd.crosstab(data_features.waterpoint_type,data_features.waterpoint_type_group)
+
+# They are nearly the same. The only difference is that waterpoint type make a difference 
+#between to standpipes. With at least 6000 entries each this difference might be reasonable
+#Let's go with waterpoint_type for now
+
+
+
+
+
 ##########################################################
          
 # NUm_private can be deleted entirely
@@ -146,6 +169,38 @@ plt.figure(figsize = (12,6))
 # scatterplot isn't so useful for the categorical data I guess, probably swarmplot and violinplot below are better
 sns.scatterplot(x = data_features["water_quality"], y = data_features["population"], hue = data_features["quantity"])
 plt.figure(figsize = (12,6))
+
+###############################Region & Region Code###########################
+
+table = pd.crosstab(data_features["region"],data_features["region_code"])
+
+# examening and plotting different regions and codes:
+    
+Arusha_region = data_features[data_features["region"]== "Mtwara"]
+x24 = Arusha_region["longitude"][Arusha_region["region_code"]==24]
+y24 = Arusha_region["latitude"][Arusha_region["region_code"]==24]
+x2 = Arusha_region["longitude"][Arusha_region["region_code"]==2]
+y2 = Arusha_region["latitude"][Arusha_region["region_code"]==2]
+plt.plot(x24,y24,"o",color = "red")
+plt.plot(x2,y2,"o",color = "blue")
+
+Mtwara_region = data_features[data_features["region"]== "Mtwara"]
+x90 = Mtwara_region["longitude"][Mtwara_region["region_code"]==90]
+y90 = Mtwara_region["latitude"][Mtwara_region["region_code"]==90]
+x99 = Mtwara_region["longitude"][Mtwara_region["region_code"]==99]
+y99= Mtwara_region["latitude"][Mtwara_region["region_code"]==99]
+x9 = Mtwara_region["longitude"][Mtwara_region["region_code"]==9]
+y9 = Mtwara_region["latitude"][Mtwara_region["region_code"]==9]
+plt.plot(x90,y90,"o",color = "red")
+plt.plot(x9,y9,"o",color = "green")
+plt.plot(x99,y99,"o",color = "blue")
+
+# Let's go with region first, the columns are nearly the same and in the Mtwara region region_code seems to make less sense
+
+
+
+
+##########################################################
 
 
 
