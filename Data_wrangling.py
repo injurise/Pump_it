@@ -244,6 +244,28 @@ print(data_features.isnull().sum())
 #checking the total num of 0s in a colums
 print(data_features["gps_heigth"].isin([0]).sum())
 
+######################################Funder & Installer#########################################################
+
+data_features.installer[data_features.installer.isnull()] = "Missing"
+data_features.installer[data_features.installer == "0"] = "Missing"
+most_common_installer = data_features.installer.value_counts().index[data_features.installer.value_counts() > 400]
+data_features.installer[~data_features.installer.isin(most_common_installer)] = "other"
+x = data_features.installer.value_counts()
+
+data_features.funder[data_features.funder.isnull()] = "Missing"
+data_features.funder[data_features.funder == "0"] = "Missing"
+most_common_funder = data_features.funder.value_counts().index[data_features.funder.value_counts() > 400]
+data_features.funder[~data_features.funder.isin(most_common_funder)] = "other"
+x = data_features.funder.value_counts()
+
+contingency_table = pd.crosstab(data_features.installer,data_features.funder)
+
+#some just seem to be missspelled or spelled differently
+#Commu and Community might be the same and amybe we can combine a lot of the government stuff 
+
+data_features.installer[data_features.installer == "HESAWA"] = "hesawa"
+data_features.installer[data_features.installer == "Hesawa"] = "hesawa"
+data_features.installer[data_features.installer == "DANID"] = "DANIDA"
 
 ######################################Prediction Part#########################################################
 
