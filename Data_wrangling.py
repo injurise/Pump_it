@@ -52,6 +52,8 @@ del data_features["extraction_type"]
 del data_features["extraction_type_class"]
 del data_features["region_code"]
 del data_features["waterpoint_type_group"]
+del data_features["source_type"]
+
 
 overview = data_features["funder"].value_counts()
 percentage = overview/overview.sum()
@@ -244,6 +246,19 @@ print(data_features.isnull().sum())
 #checking the total num of 0s in a colums
 print(data_features["gps_heigth"].isin([0]).sum())
 
+######################################Source & Source Type #########################################################
+data_features.source.value_counts()
+data_features.source_type.value_counts()
+
+contingency_table = pd.crosstab(data_features.source,data_features.source_type)
+#source type can be deleted; 
+
+######################################Source & Source Class #########################################################
+data_features.source_class.value_counts()
+data_features.source.value_counts()
+
+contingency_table = pd.crosstab(data_features.source,data_features.source_class)
+
 ######################################Funder & Installer#########################################################
 
 data_features.installer[data_features.installer.isnull()] = "Missing"
@@ -266,6 +281,8 @@ contingency_table = pd.crosstab(data_features.installer,data_features.funder)
 data_features.installer[data_features.installer == "HESAWA"] = "hesawa"
 data_features.installer[data_features.installer == "Hesawa"] = "hesawa"
 data_features.installer[data_features.installer == "DANID"] = "DANIDA"
+
+
 
 ######################################Prediction Part#########################################################
 
