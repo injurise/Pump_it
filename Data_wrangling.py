@@ -279,7 +279,7 @@ table = pd.crosstab(data_features.region,data_features.lga)
 
 ######################################Cleaning#########################################################
 
-
+x = data_features.amount_tsh.value_counts()
 
 ######################################Funder & Installer#########################################################
 
