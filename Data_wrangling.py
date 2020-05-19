@@ -53,7 +53,7 @@ del data_features["extraction_type_class"]
 del data_features["region_code"]
 del data_features["waterpoint_type_group"]
 del data_features["source_type"]
-
+del data_features["subvillage"]
 
 overview = data_features["funder"].value_counts()
 percentage = overview/overview.sum()
