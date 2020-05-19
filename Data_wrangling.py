@@ -148,6 +148,22 @@ table = pd.crosstab(data_features.waterpoint_type,data_features.waterpoint_type_
 data_features.management_group.value_counts()
 data_features.groupby("management_group").label.value_counts()
 
+##############################          lga & district code                     ####################################
+
+table = pd.crosstab(data_features.lga,data_features.region)
+data_features.district_code.value_counts()
+data_features.lga.value_counts()
+
+Njombe_lga = data_features[data_features["lga"]== "Njombe"]
+x1 = Njombe_lga["longitude"][Njombe_lga["district_code"]==1]
+y1 = Njombe_lga["latitude"][Njombe_lga["district_code"]==1]
+x2 = Njombe_lga["longitude"][Njombe_lga["district_code"]==2]
+y2 = Njombe_lga["latitude"][Njombe_lga["district_code"]==2]
+plt.plot(x2,y2,"o",color = "red")
+plt.plot(x2,y2,"o",color = "blue")
+
+c = pd.crosstab(data_features.lga, data_features.district_code).stack().reset_index(name='C')
+c.plot.scatter('lga', 'district_code', s=c.C * 0.1)
 
 ##########################################################
          
@@ -183,7 +199,7 @@ table = pd.crosstab(data_features["region"],data_features["region_code"])
 
 # examening and plotting different regions and codes:
     
-Arusha_region = data_features[data_features["region"]== "Arusha"]
+Arusha_region = data_features[data_features["region"]== "Mtwara"]
 x24 = Arusha_region["longitude"][Arusha_region["region_code"]==24]
 y24 = Arusha_region["latitude"][Arusha_region["region_code"]==24]
 x2 = Arusha_region["longitude"][Arusha_region["region_code"]==2]
@@ -263,24 +279,6 @@ data_features.source_class.value_counts()
 data_features.source.value_counts()
 
 contingency_table = pd.crosstab(data_features.source,data_features.source_class)
-
-##########################################################region & district code######
-data_features.region.value_counts()
-data_features.district_code.value_counts()
-
-table = pd.crosstab(data_features.region,data_features.district_code)
-
-# nothing clear I can find from here
-
-##########################################################region & lga######
-
-
-table = pd.crosstab(data_features.region,data_features.lga)
-# seems like regions are made up of lgas
-
-######################################Cleaning#########################################################
-
-
 
 ######################################Funder & Installer#########################################################
 
