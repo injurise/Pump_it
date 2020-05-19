@@ -55,6 +55,7 @@ del data_features["waterpoint_type_group"]
 del data_features["source_type"]
 del data_features["subvillage"]
 
+
 overview = data_features["funder"].value_counts()
 percentage = overview/overview.sum()
 percentage_working_by_funder = data_features.groupby(["funder","label"]).size().unstack()
