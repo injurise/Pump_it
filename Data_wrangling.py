@@ -183,7 +183,7 @@ table = pd.crosstab(data_features["region"],data_features["region_code"])
 
 # examening and plotting different regions and codes:
     
-Arusha_region = data_features[data_features["region"]== "Mtwara"]
+Arusha_region = data_features[data_features["region"]== "Arusha"]
 x24 = Arusha_region["longitude"][Arusha_region["region_code"]==24]
 y24 = Arusha_region["latitude"][Arusha_region["region_code"]==24]
 x2 = Arusha_region["longitude"][Arusha_region["region_code"]==2]
@@ -263,6 +263,24 @@ data_features.source_class.value_counts()
 data_features.source.value_counts()
 
 contingency_table = pd.crosstab(data_features.source,data_features.source_class)
+
+##########################################################region & district code######
+data_features.region.value_counts()
+data_features.district_code.value_counts()
+
+table = pd.crosstab(data_features.region,data_features.district_code)
+
+# nothing clear I can find from here
+
+##########################################################region & lga######
+
+
+table = pd.crosstab(data_features.region,data_features.lga)
+# seems like regions are made up of lgas
+
+######################################Cleaning#########################################################
+
+
 
 ######################################Funder & Installer#########################################################
 
