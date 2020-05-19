@@ -108,7 +108,7 @@ x2=countdataocc(data_features["quality_group"])
 c = pd.crosstab(data_features.water_quality, data_features.quality_group).stack().reset_index(name='C')
 c.plot.scatter('water_quality', 'quality_group', s=c.C * 0.1)
 
-#lga,ward 
+##################lga,ward #########################################l
 #basically regional governmental areas (ward, local government area)
 
 data_features.ward.value_counts()
@@ -141,7 +141,10 @@ table = pd.crosstab(data_features.waterpoint_type,data_features.waterpoint_type_
 #Let's go with waterpoint_type for now
 
 
-
+###############################Management group##############
+# lets delete it for now as 50000 are the same ("user group") maybe later we can reintroduce it
+data_features.management_group.value_counts()
+data_features.groupby("management_group").label.value_counts()
 
 
 ##########################################################
